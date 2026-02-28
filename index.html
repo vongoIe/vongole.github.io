@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>どっか</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;700;900&family=DM+Mono:wght@400;500&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f5f0e8;
+    --surface: #ede8dc;
+    --border: #c8bfa8;
+    --text: #1a1710;
+    --muted: #8c826e;
+    --accent: #1a1710;
+    --highlight: #d4410a;
+    --card: #fff;
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Serif JP', serif;
+    overflow: hidden;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(ellipse at 20% 50%, rgba(180,160,120,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(180,160,120,0.06) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .app {
+    width: 100%;
+    max-width: 390px;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Header */
+  .header {
+    padding: 52px 28px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .app-title {
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    line-height: 1;
+  }
+
+  .trip-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    margin-top: 4px;
+  }
+
+  /* Settings */
+  .settings-panel {
+    padding: 0 28px 16px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .settings-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .settings-label {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    white-space: nowrap;
+    min-width: 36px;
+  }
+
+  .dist-btns {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .dist-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    padding: 5px 10px;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .dist-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--bg);
+  }
+
+  /* Compass area */
+  .compass-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+    min-height: 0;
+  }
+
+  .compass-ring {
+    width: 220px;
+    height: 220px;
+    position: relative;
+    margin-bottom: 32px;
+  }
+
+  .compass-svg {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    inset: 0;
+  }
+
+  .arrow-container {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .arrow-wrap {
+    width: 72px;
+    height: 72px;
+    transition: transform 0.9s cubic-bezier(0.34, 1.4, 0.64, 1);
+  }
+
+  /* Distance */
+  .distance-display { text-align: center; }
+
+  .distance-number {
+    font-family: 'DM Mono', monospace;
+    font-size: 72px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--highlight);
+  }
+
+  .distance-unit {
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 0.3em;
+    margin-top: 2px;
+  }
+
+  /* Bottom bar */
+  .bottom-bar {
+    padding: 16px 28px 36px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .status-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .status-label {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    display: flex;
+    align-items: center;
+  }
+
+  .bearing-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .reset-btn {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 12px;
+    padding: 10px 20px;
+    border: 1.5px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    transition: all 0.15s;
+    border-radius: 2px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .reset-btn:active {
+    background: var(--accent);
+    color: var(--bg);
+  }
+
+  /* State screens */
+  .state-screen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 36px;
+    background: var(--bg);
+    z-index: 20;
+  }
+
+  .state-screen.hidden { display: none; }
+
+  .start-title {
+    font-size: 42px;
+    font-weight: 900;
+    margin-bottom: 20px;
+    letter-spacing: 0.05em;
+  }
+
+  .start-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 2.2;
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .start-desc em {
+    font-style: normal;
+    color: var(--highlight);
+    font-weight: 700;
+  }
+
+  .btn-primary {
+    font-family: 'Noto Serif JP', serif;
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    padding: 18px 52px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    cursor: pointer;
+    border-radius: 2px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Arrival screen */
+  .arrival-screen {
+    position: absolute;
+    inset: 0;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 36px;
+    z-index: 30;
+    animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .arrival-screen.hidden { display: none; }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .arrival-tag {
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--highlight);
+    margin-bottom: 16px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .arrival-name {
+    font-size: 30px;
+    font-weight: 900;
+    text-align: center;
+    line-height: 1.3;
+    margin-bottom: 6px;
+  }
+
+  .arrival-type {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .arrival-coords {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--border);
+    margin-bottom: 40px;
+  }
+
+  .arrival-stats {
+    display: flex;
+    gap: 48px;
+    margin-bottom: 48px;
+  }
+
+  .stat-item { text-align: center; }
+
+  .stat-value {
+    font-family: 'DM Mono', monospace;
+    font-size: 36px;
+    font-weight: 500;
+    color: var(--highlight);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.2em;
+    margin-top: 6px;
+  }
+
+  /* Loading overlay */
+  .loading-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(245,240,232,0.92);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 25;
+    gap: 16px;
+  }
+
+  .loading-overlay.hidden { display: none; }
+
+  .loading-text {
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 0.2em;
+  }
+
+  .loading-dots { display: flex; gap: 8px; }
+
+  .loading-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--muted);
+    border-radius: 50%;
+    animation: loadpulse 1.2s ease-in-out infinite;
+  }
+
+  .loading-dot:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dot:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes loadpulse {
+    0%, 100% { opacity: 0.2; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1); }
+  }
+
+  /* GPS dot */
+  .gps-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #22c55e;
+    display: inline-block;
+    margin-right: 6px;
+    flex-shrink: 0;
+    animation: gpspulse 2s ease-in-out infinite;
+  }
+
+  .gps-dot.inactive { background: var(--border); animation: none; }
+
+  @keyframes gpspulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .error-msg {
+    font-size: 13px;
+    color: var(--highlight);
+    text-align: center;
+    margin-bottom: 24px;
+    line-height: 1.8;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Main UI -->
+  <div id="mainUI" style="display:none; flex-direction:column; height:100%;">
+
+    <div class="header">
+      <div class="app-title">どっか</div>
+      <div class="trip-badge" id="tripBadge">旅 #1</div>
+    </div>
+
+    <div class="settings-panel">
+      <div class="settings-row">
+        <span class="settings-label">距離</span>
+        <div class="dist-btns">
+          <button class="dist-btn active" onclick="selectDist(this, 0)">ランダム</button>
+          <button class="dist-btn" onclick="selectDist(this, 5)">5km</button>
+          <button class="dist-btn" onclick="selectDist(this, 10)">10km</button>
+          <button class="dist-btn" onclick="selectDist(this, 20)">20km</button>
+          <button class="dist-btn" onclick="selectDist(this, 40)">40km</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="compass-area">
+      <div class="compass-ring">
+        <svg class="compass-svg" viewBox="0 0 220 220">
+          <circle cx="110" cy="110" r="104" fill="none" stroke="#c8bfa8" stroke-width="1"/>
+          <circle cx="110" cy="110" r="88" fill="none" stroke="#ddd8ca" stroke-width="0.5"/>
+          <circle cx="110" cy="110" r="54" fill="none" stroke="#ddd8ca" stroke-width="0.5"/>
+          <circle id="progressRing" cx="110" cy="110" r="104"
+                  fill="none" stroke="#d4410a" stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-dasharray="653" stroke-dashoffset="653"
+                  transform="rotate(-90 110 110)"
+                  style="transition: stroke-dashoffset 1s ease; opacity:0.5"/>
+          <g id="tickMarks"></g>
+          <text fill="#1a1710" font-family="'DM Mono',monospace" font-size="11" text-anchor="middle" dominant-baseline="middle" x="110" y="14" font-weight="500">N</text>
+          <text fill="#8c826e" font-family="'DM Mono',monospace" font-size="9" text-anchor="middle" dominant-baseline="middle" x="207" y="113">E</text>
+          <text fill="#8c826e" font-family="'DM Mono',monospace" font-size="9" text-anchor="middle" dominant-baseline="middle" x="110" y="210">S</text>
+          <text fill="#8c826e" font-family="'DM Mono',monospace" font-size="9" text-anchor="middle" dominant-baseline="middle" x="13" y="113">W</text>
+        </svg>
+
+        <div class="arrow-container">
+          <div class="arrow-wrap" id="arrowWrap">
+            <svg viewBox="0 0 72 72" width="72" height="72">
+              <polygon points="36,6 46,50 36,42 26,50" fill="#1a1710"/>
+              <polygon points="36,66 26,50 36,42 46,50" fill="#c8bfa8"/>
+              <circle cx="36" cy="36" r="5" fill="#f5f0e8"/>
+              <circle cx="36" cy="36" r="2.5" fill="#d4410a"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="distance-display">
+        <div class="distance-number" id="distanceNum">—</div>
+        <div class="distance-unit" id="distanceUnit">km</div>
+      </div>
+    </div>
+
+    <div class="bottom-bar">
+      <div class="status-info">
+        <div class="status-label">
+          <span class="gps-dot inactive" id="gpsDot"></span>
+          <span id="statusLabel">GPS取得中</span>
+        </div>
+        <div class="bearing-text" id="bearingText">—°</div>
+      </div>
+      <button class="reset-btn" onclick="resetDestination()">リセット</button>
+    </div>
+
+  </div>
+
+  <!-- Start screen -->
+  <div class="state-screen" id="startScreen">
+    <div class="start-title">どっか</div>
+    <div class="start-desc">
+      目的地はわからない。<br>
+      矢印と距離だけがわかる。<br>
+      <em>着いてはじめて</em>、<br>
+      どっかがどこかを知る。
+    </div>
+    <button class="btn-primary" onclick="startApp()">はじめる</button>
+  </div>
+
+  <!-- Error screen -->
+  <div class="state-screen hidden" id="errorScreen">
+    <div style="font-size:40px; margin-bottom:20px;">📍</div>
+    <div class="error-msg" id="errorMsg">位置情報の取得に失敗しました。<br>ブラウザの設定を確認してください。</div>
+    <button class="btn-primary" onclick="startApp()">もう一度</button>
+  </div>
+
+  <!-- Loading overlay -->
+  <div class="loading-overlay hidden" id="loadingOverlay">
+    <div class="loading-dots">
+      <div class="loading-dot"></div>
+      <div class="loading-dot"></div>
+      <div class="loading-dot"></div>
+    </div>
+    <div class="loading-text">目的地を選んでいます</div>
+  </div>
+
+  <!-- Arrival screen -->
+  <div class="arrival-screen hidden" id="arrivalScreen">
+    <div class="arrival-tag">✓ 到着</div>
+    <div class="arrival-name" id="arrivalName">—</div>
+    <div class="arrival-type" id="arrivalType"></div>
+    <div class="arrival-coords" id="arrivalCoords"></div>
+    <div class="arrival-stats">
+      <div class="stat-item">
+        <div class="stat-value" id="statWalked">—</div>
+        <div class="stat-label">移動距離</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="statTrip">#1</div>
+        <div class="stat-label">旅の数</div>
+      </div>
+    </div>
+    <button class="btn-primary" onclick="nextDestination()">次のどっかへ</button>
+  </div>
+
+</div>
+
+<script>
+  let destination = null;
+  let watchId = null;
+  let currentPos = null;
+  let startPos = null;
+  let lastPos = null;
+  let tripNumber = 1;
+  let totalDistanceTraveled = 0;
+  let selectedKm = 0;
+  let isResetting = false;
+  const ARRIVAL_THRESHOLD = 150;
+  const CIRC = 2 * Math.PI * 104;
+
+  const toRad = d => d * Math.PI / 180;
+  const toDeg = r => r * 180 / Math.PI;
+
+  function haversine(lat1, lng1, lat2, lng2) {
+    const R = 6371000;
+    const dLat = toRad(lat2 - lat1), dLng = toRad(lng2 - lng1);
+    const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng/2)**2;
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  }
+
+  function calcBearing(lat1, lng1, lat2, lng2) {
+    const φ1 = toRad(lat1), φ2 = toRad(lat2), Δλ = toRad(lng2 - lng1);
+    const y = Math.sin(Δλ) * Math.cos(φ2);
+    const x = Math.cos(φ1) * Math.sin(φ2) - Math.sin(φ1) * Math.cos(φ2) * Math.cos(Δλ);
+    return (toDeg(Math.atan2(y, x)) + 360) % 360;
+  }
+
+  function formatDist(m) {
+    return m >= 1000 ? { num: (m/1000).toFixed(1), unit: 'km' } : { num: Math.round(m), unit: 'm' };
+  }
+
+  function drawTicks() {
+    const g = document.getElementById('tickMarks');
+    const cx = 110, cy = 110, r = 104;
+    let html = '';
+    for (let i = 0; i < 72; i++) {
+      const a = i * 5 * Math.PI / 180;
+      const isCard = i % 18 === 0, isMaj = i % 9 === 0;
+      const len = isCard ? 10 : isMaj ? 6 : 3;
+      const stroke = isCard ? '#8c826e' : '#c8bfa8';
+      const sw = isCard ? 1.5 : 0.8;
+      const x1 = cx + r * Math.sin(a), y1 = cy - r * Math.cos(a);
+      const x2 = cx + (r - len) * Math.sin(a), y2 = cy - (r - len) * Math.cos(a);
+      html += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${stroke}" stroke-width="${sw}"/>`;
+    }
+    g.innerHTML = html;
+  }
+
+  async function pickDestination(lat, lng, radiusKm) {
+    document.getElementById('loadingOverlay').classList.remove('hidden');
+
+    const actualRadius = radiusKm === 0
+      ? [5, 8, 12, 15][Math.floor(Math.random() * 4)]
+      : radiusKm;
+
+    const prompt = `あなたはナビアプリのバックエンドです。
+現在地: 緯度${lat.toFixed(4)}, 経度${lng.toFixed(4)}
+目的地の条件:
+- 現在地から直線距離で約${actualRadius}km以内
+- 誰でも無料または気軽に立ち寄れる場所（公園、広場、神社・寺、図書館、カフェ、書店、コンビニ、ベーカリー、商店街、観光スポット、海岸、川岸など）
+- 実在するか実在しそうな、具体的な場所名
+
+必ずこのJSON形式のみで返答してください。説明文や\`\`\`は不要です:
+{"name":"場所の名前","type":"種類","lat":緯度の数値,"lng":経度の数値}`;
+
+    try {
+      const res = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-20250514",
+          max_tokens: 200,
+          messages: [{ role: "user", content: prompt }]
+        })
+      });
+
+      const data = await res.json();
+      const text = (data.content || []).map(c => c.text || '').join('');
+      const clean = text.replace(/```json|```/g, '').trim();
+      const parsed = JSON.parse(clean);
+
+      // Sanity check
+      if (typeof parsed.lat !== 'number' || typeof parsed.lng !== 'number') throw new Error('bad coords');
+      const dist = haversine(lat, lng, parsed.lat, parsed.lng);
+      if (dist > actualRadius * 2200) throw new Error('too far: ' + dist);
+
+      document.getElementById('loadingOverlay').classList.add('hidden');
+      return parsed;
+
+    } catch (e) {
+      console.warn('Fallback random point:', e);
+      document.getElementById('loadingOverlay').classList.add('hidden');
+      const angle = Math.random() * 2 * Math.PI;
+      const frac = 0.6 + Math.random() * 0.4;
+      return {
+        name: "どこか",
+        type: "不明",
+        lat: lat + (actualRadius * frac / 111.32) * Math.cos(angle),
+        lng: lng + (actualRadius * frac / (111.32 * Math.cos(toRad(lat)))) * Math.sin(angle)
+      };
+    }
+  }
+
+  function updateUI(pos) {
+    const { latitude, longitude } = pos.coords;
+    currentPos = { lat: latitude, lng: longitude };
+
+    document.getElementById('gpsDot').classList.remove('inactive');
+    document.getElementById('statusLabel').textContent = '追跡中';
+
+    if (!destination || isResetting) return;
+
+    const dist = haversine(latitude, longitude, destination.lat, destination.lng);
+    const bear = calcBearing(latitude, longitude, destination.lat, destination.lng);
+
+    document.getElementById('arrowWrap').style.transform = `rotate(${bear}deg)`;
+
+    const { num, unit } = formatDist(dist);
+    document.getElementById('distanceNum').textContent = num;
+    document.getElementById('distanceUnit').textContent = unit;
+    document.getElementById('bearingText').textContent = `${Math.round(bear)}°`;
+
+    if (startPos) {
+      const startDist = haversine(startPos.lat, startPos.lng, destination.lat, destination.lng);
+      const progress = Math.max(0, Math.min(1, 1 - dist / startDist));
+      document.getElementById('progressRing').style.strokeDashoffset = (CIRC * (1 - progress)).toFixed(1);
+    }
+
+    if (lastPos) totalDistanceTraveled += haversine(lastPos.lat, lastPos.lng, latitude, longitude);
+    lastPos = { lat: latitude, lng: longitude };
+
+    if (dist <= ARRIVAL_THRESHOLD) showArrival();
+  }
+
+  function showArrival() {
+    if (watchId) { navigator.geolocation.clearWatch(watchId); watchId = null; }
+
+    document.getElementById('arrivalName').textContent = destination.name;
+    document.getElementById('arrivalType').textContent = destination.type || '';
+    document.getElementById('arrivalCoords').textContent =
+      `${destination.lat.toFixed(5)}, ${destination.lng.toFixed(5)}`;
+
+    const { num, unit } = formatDist(totalDistanceTraveled);
+    document.getElementById('statWalked').textContent = `${num}${unit}`;
+    document.getElementById('statTrip').textContent = `#${tripNumber}`;
+
+    document.getElementById('arrivalScreen').classList.remove('hidden');
+  }
+
+  async function nextDestination() {
+    document.getElementById('arrivalScreen').classList.add('hidden');
+    tripNumber++;
+    document.getElementById('tripBadge').textContent = `旅 #${tripNumber}`;
+    totalDistanceTraveled = 0;
+    lastPos = currentPos ? { ...currentPos } : null;
+    document.getElementById('progressRing').style.strokeDashoffset = CIRC.toFixed(1);
+
+    if (currentPos) {
+      destination = await pickDestination(currentPos.lat, currentPos.lng, selectedKm);
+      startPos = { ...currentPos };
+      startTracking();
+    }
+  }
+
+  async function resetDestination() {
+    isResetting = true;
+    if (watchId) { navigator.geolocation.clearWatch(watchId); watchId = null; }
+    totalDistanceTraveled = 0;
+    document.getElementById('progressRing').style.strokeDashoffset = CIRC.toFixed(1);
+    document.getElementById('distanceNum').textContent = '—';
+    document.getElementById('bearingText').textContent = '—°';
+    document.getElementById('arrowWrap').style.transform = 'rotate(0deg)';
+
+    if (currentPos) {
+      destination = await pickDestination(currentPos.lat, currentPos.lng, selectedKm);
+      startPos = { ...currentPos };
+      lastPos = { ...currentPos };
+      isResetting = false;
+      startTracking();
+    } else {
+      isResetting = false;
+    }
+  }
+
+  function selectDist(btn, km) {
+    document.querySelectorAll('.dist-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedKm = km;
+  }
+
+  function startTracking() {
+    if (watchId) navigator.geolocation.clearWatch(watchId);
+    watchId = navigator.geolocation.watchPosition(
+      updateUI,
+      () => {
+        document.getElementById('statusLabel').textContent = 'GPS不安定';
+        document.getElementById('gpsDot').classList.add('inactive');
+      },
+      { enableHighAccuracy: true, maximumAge: 5000, timeout: 20000 }
+    );
+  }
+
+  async function startApp() {
+    document.getElementById('startScreen').classList.add('hidden');
+    document.getElementById('errorScreen').classList.add('hidden');
+
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const { latitude, longitude } = pos.coords;
+        currentPos = { lat: latitude, lng: longitude };
+        startPos = { ...currentPos };
+        lastPos = { ...currentPos };
+
+        document.getElementById('mainUI').style.display = 'flex';
+        drawTicks();
+
+        destination = await pickDestination(latitude, longitude, selectedKm);
+        startTracking();
+      },
+      (err) => {
+        document.getElementById('errorMsg').textContent =
+          err.code === 1
+            ? '位置情報のアクセスが拒否されました。\nブラウザ設定から許可してください。'
+            : 'GPS取得に失敗しました。もう一度お試しください。';
+        document.getElementById('errorScreen').classList.remove('hidden');
+      },
+      { enableHighAccuracy: true, timeout: 20000 }
+    );
+  }
+
+  drawTicks();
+</script>
+</body>
+</html>
