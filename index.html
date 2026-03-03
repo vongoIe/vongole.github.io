@@ -368,6 +368,16 @@
           <button class="dist-btn"        data-km="40" onclick="selectDist(this,40)">40km</button>
         </div>
       </div>
+      <div class="settings-row" style="margin-top:8px;">
+        <span class="settings-label">間隔</span>
+        <div class="dist-btns" id="intervalBtns">
+          <button class="dist-btn active" data-sec="0"  onclick="selectInterval(this,0)">OFF</button>
+          <button class="dist-btn"        data-sec="3"  onclick="selectInterval(this,3)">3秒</button>
+          <button class="dist-btn"        data-sec="5"  onclick="selectInterval(this,5)">5秒</button>
+          <button class="dist-btn"        data-sec="10" onclick="selectInterval(this,10)">10秒</button>
+          <button class="dist-btn"        data-sec="30" onclick="selectInterval(this,30)">30秒</button>
+        </div>
+      </div>
     </div>
 
     <div class="compass-area">
@@ -413,7 +423,10 @@
         </div>
         <div class="bearing-text" id="bearingText">—°</div>
       </div>
-      <button class="reset-btn" onclick="resetDestination()">リセット</button>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button class="reset-btn" id="compassBtn" onclick="recalibrateCompass()" title="コンパスを再調整">🧭</button>
+        <button class="reset-btn" onclick="resetDestination()">リセット</button>
+      </div>
     </div>
   </div>
 
@@ -733,6 +746,47 @@
       },
       { enableHighAccuracy: true, maximumAge: 5000, timeout: 20000 }
     );
+  }
+
+  // ── Auto recalibrate interval ──
+  let recalInterval = null;
+  let selectedIntervalSec = 0;
+
+  function selectInterval(btn, sec) {
+    selectedIntervalSec = sec;
+    document.querySelectorAll('#intervalBtns .dist-btn').forEach(b => {
+      b.classList.toggle('active', parseInt(b.dataset.sec) === sec);
+    });
+    clearInterval(recalInterval);
+    recalInterval = null;
+    if (sec > 0) {
+      recalInterval = setInterval(() => {
+        recalibrateCompass(true); // silent=true でボタンアニメなし
+      }, sec * 1000);
+    }
+  }
+
+  // ── Compass recalibrate ──
+  function recalibrateCompass(silent = false) {
+    const btn = document.getElementById('compassBtn');
+
+    // センサーを一旦リセット
+    deviceHeading = null;
+    orientationActive = false;
+
+    if (!silent) {
+      // 手動のときだけボタンをスピンアニメーション
+      btn.style.transition = 'transform 0.6s ease';
+      btn.style.transform = 'rotate(360deg)';
+      setTimeout(() => {
+        btn.style.transition = '';
+        btn.style.transform = '';
+      }, 650);
+      document.getElementById('statusLabel').textContent = '再調整中...';
+    }
+
+    // 再登録
+    startOrientation();
   }
 
   // ── Orientation sensor ──
