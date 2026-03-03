@@ -11,13 +11,11 @@
 
   :root {
     --bg: #f5f0e8;
-    --surface: #ede8dc;
     --border: #c8bfa8;
     --text: #1a1710;
     --muted: #8c826e;
     --accent: #1a1710;
     --highlight: #d4410a;
-    --card: #fff;
   }
 
   html, body {
@@ -30,7 +28,6 @@
 
   body {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     min-height: 100vh;
@@ -68,12 +65,7 @@
     z-index: 1;
   }
 
-  .app-title {
-    font-size: 28px;
-    font-weight: 900;
-    letter-spacing: 0.05em;
-    line-height: 1;
-  }
+  .app-title { font-size: 28px; font-weight: 900; letter-spacing: 0.05em; line-height: 1; }
 
   .trip-badge {
     font-family: 'DM Mono', monospace;
@@ -93,11 +85,7 @@
     z-index: 1;
   }
 
-  .settings-row {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
+  .settings-row { display: flex; gap: 8px; align-items: center; }
 
   .settings-label {
     font-size: 11px;
@@ -107,11 +95,7 @@
     min-width: 36px;
   }
 
-  .dist-btns {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
+  .dist-btns { display: flex; gap: 6px; flex-wrap: wrap; }
 
   .dist-btn {
     font-family: 'DM Mono', monospace;
@@ -126,13 +110,9 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  .dist-btn.active {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: var(--bg);
-  }
+  .dist-btn.active { background: var(--accent); border-color: var(--accent); color: var(--bg); }
 
-  /* Compass area */
+  /* Compass */
   .compass-area {
     flex: 1;
     display: flex;
@@ -144,19 +124,8 @@
     min-height: 0;
   }
 
-  .compass-ring {
-    width: 220px;
-    height: 220px;
-    position: relative;
-    margin-bottom: 32px;
-  }
-
-  .compass-svg {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    inset: 0;
-  }
+  .compass-ring { width: 220px; height: 220px; position: relative; margin-bottom: 32px; }
+  .compass-svg { width: 100%; height: 100%; position: absolute; inset: 0; }
 
   .arrow-container {
     position: absolute;
@@ -203,11 +172,7 @@
     z-index: 1;
   }
 
-  .status-info {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
+  .status-info { display: flex; flex-direction: column; gap: 2px; }
 
   .status-label {
     font-size: 11px;
@@ -217,12 +182,7 @@
     align-items: center;
   }
 
-  .bearing-text {
-    font-family: 'DM Mono', monospace;
-    font-size: 18px;
-    font-weight: 500;
-    color: var(--text);
-  }
+  .bearing-text { font-family: 'DM Mono', monospace; font-size: 18px; font-weight: 500; }
 
   .reset-btn {
     font-family: 'Noto Serif JP', serif;
@@ -238,10 +198,7 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  .reset-btn:active {
-    background: var(--accent);
-    color: var(--bg);
-  }
+  .reset-btn:active { background: var(--accent); color: var(--bg); }
 
   /* State screens */
   .state-screen {
@@ -258,12 +215,7 @@
 
   .state-screen.hidden { display: none; }
 
-  .start-title {
-    font-size: 42px;
-    font-weight: 900;
-    margin-bottom: 20px;
-    letter-spacing: 0.05em;
-  }
+  .start-title { font-size: 42px; font-weight: 900; margin-bottom: 20px; letter-spacing: 0.05em; }
 
   .start-desc {
     font-size: 14px;
@@ -273,11 +225,7 @@
     margin-bottom: 48px;
   }
 
-  .start-desc em {
-    font-style: normal;
-    color: var(--highlight);
-    font-weight: 700;
-  }
+  .start-desc em { font-style: normal; color: var(--highlight); font-weight: 700; }
 
   .btn-primary {
     font-family: 'Noto Serif JP', serif;
@@ -293,7 +241,7 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  /* Arrival screen */
+  /* Arrival */
   .arrival-screen {
     position: absolute;
     inset: 0;
@@ -322,19 +270,8 @@
     font-family: 'DM Mono', monospace;
   }
 
-  .arrival-name {
-    font-size: 30px;
-    font-weight: 900;
-    text-align: center;
-    line-height: 1.3;
-    margin-bottom: 6px;
-  }
-
-  .arrival-type {
-    font-size: 13px;
-    color: var(--muted);
-    margin-bottom: 4px;
-  }
+  .arrival-name { font-size: 30px; font-weight: 900; text-align: center; line-height: 1.3; margin-bottom: 6px; }
+  .arrival-type { font-size: 13px; color: var(--muted); margin-bottom: 4px; }
 
   .arrival-coords {
     font-family: 'DM Mono', monospace;
@@ -343,12 +280,7 @@
     margin-bottom: 40px;
   }
 
-  .arrival-stats {
-    display: flex;
-    gap: 48px;
-    margin-bottom: 48px;
-  }
-
+  .arrival-stats { display: flex; gap: 48px; margin-bottom: 48px; }
   .stat-item { text-align: center; }
 
   .stat-value {
@@ -359,14 +291,9 @@
     line-height: 1;
   }
 
-  .stat-label {
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 0.2em;
-    margin-top: 6px;
-  }
+  .stat-label { font-size: 11px; color: var(--muted); letter-spacing: 0.2em; margin-top: 6px; }
 
-  /* Loading overlay */
+  /* Loading */
   .loading-overlay {
     position: absolute;
     inset: 0;
@@ -380,18 +307,11 @@
   }
 
   .loading-overlay.hidden { display: none; }
-
-  .loading-text {
-    font-size: 13px;
-    color: var(--muted);
-    letter-spacing: 0.2em;
-  }
-
+  .loading-text { font-size: 13px; color: var(--muted); letter-spacing: 0.2em; }
   .loading-dots { display: flex; gap: 8px; }
 
   .loading-dot {
-    width: 8px;
-    height: 8px;
+    width: 8px; height: 8px;
     background: var(--muted);
     border-radius: 50%;
     animation: loadpulse 1.2s ease-in-out infinite;
@@ -407,8 +327,7 @@
 
   /* GPS dot */
   .gps-dot {
-    width: 7px;
-    height: 7px;
+    width: 7px; height: 7px;
     border-radius: 50%;
     background: #22c55e;
     display: inline-block;
@@ -424,13 +343,7 @@
     50% { opacity: 0.3; }
   }
 
-  .error-msg {
-    font-size: 13px;
-    color: var(--highlight);
-    text-align: center;
-    margin-bottom: 24px;
-    line-height: 1.8;
-  }
+  .error-msg { font-size: 13px; color: var(--highlight); text-align: center; margin-bottom: 24px; line-height: 1.8; }
 </style>
 </head>
 <body>
@@ -438,7 +351,6 @@
 
   <!-- Main UI -->
   <div id="mainUI" style="display:none; flex-direction:column; height:100%;">
-
     <div class="header">
       <div class="app-title">どっか</div>
       <div class="trip-badge" id="tripBadge">旅 #1</div>
@@ -448,11 +360,12 @@
       <div class="settings-row">
         <span class="settings-label">距離</span>
         <div class="dist-btns">
-          <button class="dist-btn active" onclick="selectDist(this, 0)">ランダム</button>
-          <button class="dist-btn" onclick="selectDist(this, 5)">5km</button>
-          <button class="dist-btn" onclick="selectDist(this, 10)">10km</button>
-          <button class="dist-btn" onclick="selectDist(this, 20)">20km</button>
-          <button class="dist-btn" onclick="selectDist(this, 40)">40km</button>
+          <button class="dist-btn active" data-km="0"  onclick="selectDist(this,0)">ランダム</button>
+          <button class="dist-btn"        data-km="1"  onclick="selectDist(this,1)">1km</button>
+          <button class="dist-btn"        data-km="5"  onclick="selectDist(this,5)">5km</button>
+          <button class="dist-btn"        data-km="10" onclick="selectDist(this,10)">10km</button>
+          <button class="dist-btn"        data-km="20" onclick="selectDist(this,20)">20km</button>
+          <button class="dist-btn"        data-km="40" onclick="selectDist(this,40)">40km</button>
         </div>
       </div>
     </div>
@@ -461,27 +374,25 @@
       <div class="compass-ring">
         <svg class="compass-svg" viewBox="0 0 220 220">
           <circle cx="110" cy="110" r="104" fill="none" stroke="#c8bfa8" stroke-width="1"/>
-          <circle cx="110" cy="110" r="88" fill="none" stroke="#ddd8ca" stroke-width="0.5"/>
-          <circle cx="110" cy="110" r="54" fill="none" stroke="#ddd8ca" stroke-width="0.5"/>
+          <circle cx="110" cy="110" r="88"  fill="none" stroke="#ddd8ca" stroke-width="0.5"/>
+          <circle cx="110" cy="110" r="54"  fill="none" stroke="#ddd8ca" stroke-width="0.5"/>
           <circle id="progressRing" cx="110" cy="110" r="104"
-                  fill="none" stroke="#d4410a" stroke-width="2"
-                  stroke-linecap="round"
+                  fill="none" stroke="#d4410a" stroke-width="2" stroke-linecap="round"
                   stroke-dasharray="653" stroke-dashoffset="653"
                   transform="rotate(-90 110 110)"
-                  style="transition: stroke-dashoffset 1s ease; opacity:0.5"/>
+                  style="transition:stroke-dashoffset 1s ease;opacity:.5"/>
           <g id="tickMarks"></g>
           <text fill="#1a1710" font-family="'DM Mono',monospace" font-size="11" text-anchor="middle" dominant-baseline="middle" x="110" y="14" font-weight="500">N</text>
-          <text fill="#8c826e" font-family="'DM Mono',monospace" font-size="9" text-anchor="middle" dominant-baseline="middle" x="207" y="113">E</text>
-          <text fill="#8c826e" font-family="'DM Mono',monospace" font-size="9" text-anchor="middle" dominant-baseline="middle" x="110" y="210">S</text>
-          <text fill="#8c826e" font-family="'DM Mono',monospace" font-size="9" text-anchor="middle" dominant-baseline="middle" x="13" y="113">W</text>
+          <text fill="#8c826e" font-family="'DM Mono',monospace" font-size="9"  text-anchor="middle" dominant-baseline="middle" x="207" y="113">E</text>
+          <text fill="#8c826e" font-family="'DM Mono',monospace" font-size="9"  text-anchor="middle" dominant-baseline="middle" x="110" y="210">S</text>
+          <text fill="#8c826e" font-family="'DM Mono',monospace" font-size="9"  text-anchor="middle" dominant-baseline="middle" x="13"  y="113">W</text>
         </svg>
-
         <div class="arrow-container">
           <div class="arrow-wrap" id="arrowWrap">
             <svg viewBox="0 0 72 72" width="72" height="72">
               <polygon points="36,6 46,50 36,42 26,50" fill="#1a1710"/>
               <polygon points="36,66 26,50 36,42 46,50" fill="#c8bfa8"/>
-              <circle cx="36" cy="36" r="5" fill="#f5f0e8"/>
+              <circle cx="36" cy="36" r="5"   fill="#f5f0e8"/>
               <circle cx="36" cy="36" r="2.5" fill="#d4410a"/>
             </svg>
           </div>
@@ -490,7 +401,7 @@
 
       <div class="distance-display">
         <div class="distance-number" id="distanceNum">—</div>
-        <div class="distance-unit" id="distanceUnit">km</div>
+        <div class="distance-unit"   id="distanceUnit">km</div>
       </div>
     </div>
 
@@ -504,7 +415,6 @@
       </div>
       <button class="reset-btn" onclick="resetDestination()">リセット</button>
     </div>
-
   </div>
 
   <!-- Start screen -->
@@ -521,7 +431,7 @@
 
   <!-- Error screen -->
   <div class="state-screen hidden" id="errorScreen">
-    <div style="font-size:40px; margin-bottom:20px;">📍</div>
+    <div style="font-size:40px;margin-bottom:20px">📍</div>
     <div class="error-msg" id="errorMsg">位置情報の取得に失敗しました。<br>ブラウザの設定を確認してください。</div>
     <button class="btn-primary" onclick="startApp()">もう一度</button>
   </div>
@@ -539,8 +449,8 @@
   <!-- Arrival screen -->
   <div class="arrival-screen hidden" id="arrivalScreen">
     <div class="arrival-tag">✓ 到着</div>
-    <div class="arrival-name" id="arrivalName">—</div>
-    <div class="arrival-type" id="arrivalType"></div>
+    <div class="arrival-name"   id="arrivalName">—</div>
+    <div class="arrival-type"   id="arrivalType"></div>
     <div class="arrival-coords" id="arrivalCoords"></div>
     <div class="arrival-stats">
       <div class="stat-item">
@@ -558,6 +468,7 @@
 </div>
 
 <script>
+  // ── State ──
   let destination = null;
   let watchId = null;
   let currentPos = null;
@@ -570,6 +481,37 @@
   const ARRIVAL_THRESHOLD = 150;
   const CIRC = 2 * Math.PI * 104;
 
+  // ── Persistence (localStorage) ──
+  function saveState() {
+    try {
+      localStorage.setItem('dokka_v1', JSON.stringify({
+        destination,
+        tripNumber,
+        selectedKm,
+        startPos
+      }));
+    } catch(e) { console.warn('save failed', e); }
+  }
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem('dokka_v1');
+      if (!raw) return false;
+      const s = JSON.parse(raw);
+      if (!s.destination?.lat || !s.destination?.lng) return false;
+      destination = s.destination;
+      tripNumber   = s.tripNumber  ?? 1;
+      selectedKm   = s.selectedKm  ?? 0;
+      startPos     = s.startPos    ?? null;
+      return true;
+    } catch(e) { return false; }
+  }
+
+  function clearSavedState() {
+    try { localStorage.removeItem('dokka_v1'); } catch(e) {}
+  }
+
+  // ── Geo math ──
   const toRad = d => d * Math.PI / 180;
   const toDeg = r => r * 180 / Math.PI;
 
@@ -591,6 +533,7 @@
     return m >= 1000 ? { num: (m/1000).toFixed(1), unit: 'km' } : { num: Math.round(m), unit: 'm' };
   }
 
+  // ── Compass ticks ──
   function drawTicks() {
     const g = document.getElementById('tickMarks');
     const cx = 110, cy = 110, r = 104;
@@ -601,13 +544,26 @@
       const len = isCard ? 10 : isMaj ? 6 : 3;
       const stroke = isCard ? '#8c826e' : '#c8bfa8';
       const sw = isCard ? 1.5 : 0.8;
-      const x1 = cx + r * Math.sin(a), y1 = cy - r * Math.cos(a);
-      const x2 = cx + (r - len) * Math.sin(a), y2 = cy - (r - len) * Math.cos(a);
+      const x1 = cx + r * Math.sin(a),       y1 = cy - r * Math.cos(a);
+      const x2 = cx + (r-len) * Math.sin(a), y2 = cy - (r-len) * Math.cos(a);
       html += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${stroke}" stroke-width="${sw}"/>`;
     }
     g.innerHTML = html;
   }
 
+  // ── Distance button sync ──
+  function syncDistButtons() {
+    document.querySelectorAll('.dist-btn').forEach(b => {
+      b.classList.toggle('active', parseInt(b.dataset.km) === selectedKm);
+    });
+  }
+
+  function selectDist(btn, km) {
+    selectedKm = km;
+    syncDistButtons();
+  }
+
+  // ── Claude picks real spot ──
   async function pickDestination(lat, lng, radiusKm) {
     document.getElementById('loadingOverlay').classList.remove('hidden');
 
@@ -641,7 +597,6 @@
       const clean = text.replace(/```json|```/g, '').trim();
       const parsed = JSON.parse(clean);
 
-      // Sanity check
       if (typeof parsed.lat !== 'number' || typeof parsed.lng !== 'number') throw new Error('bad coords');
       const dist = haversine(lat, lng, parsed.lat, parsed.lng);
       if (dist > actualRadius * 2200) throw new Error('too far: ' + dist);
@@ -663,6 +618,7 @@
     }
   }
 
+  // ── GPS update ──
   function updateUI(pos) {
     const { latitude, longitude } = pos.coords;
     currentPos = { lat: latitude, lng: longitude };
@@ -672,19 +628,19 @@
 
     if (!destination || isResetting) return;
 
-    const dist = haversine(latitude, longitude, destination.lat, destination.lng);
-    const bear = calcBearing(latitude, longitude, destination.lat, destination.lng);
+    const dist  = haversine(latitude, longitude, destination.lat, destination.lng);
+    const bear  = calcBearing(latitude, longitude, destination.lat, destination.lng);
 
     document.getElementById('arrowWrap').style.transform = `rotate(${bear}deg)`;
 
     const { num, unit } = formatDist(dist);
-    document.getElementById('distanceNum').textContent = num;
+    document.getElementById('distanceNum').textContent  = num;
     document.getElementById('distanceUnit').textContent = unit;
-    document.getElementById('bearingText').textContent = `${Math.round(bear)}°`;
+    document.getElementById('bearingText').textContent  = `${Math.round(bear)}°`;
 
     if (startPos) {
       const startDist = haversine(startPos.lat, startPos.lng, destination.lat, destination.lng);
-      const progress = Math.max(0, Math.min(1, 1 - dist / startDist));
+      const progress  = Math.max(0, Math.min(1, 1 - dist / startDist));
       document.getElementById('progressRing').style.strokeDashoffset = (CIRC * (1 - progress)).toFixed(1);
     }
 
@@ -694,21 +650,24 @@
     if (dist <= ARRIVAL_THRESHOLD) showArrival();
   }
 
+  // ── Arrival ──
   function showArrival() {
     if (watchId) { navigator.geolocation.clearWatch(watchId); watchId = null; }
+    clearSavedState(); // 到着したので保存データ消去
 
-    document.getElementById('arrivalName').textContent = destination.name;
-    document.getElementById('arrivalType').textContent = destination.type || '';
+    document.getElementById('arrivalName').textContent   = destination.name;
+    document.getElementById('arrivalType').textContent   = destination.type || '';
     document.getElementById('arrivalCoords').textContent =
       `${destination.lat.toFixed(5)}, ${destination.lng.toFixed(5)}`;
 
     const { num, unit } = formatDist(totalDistanceTraveled);
     document.getElementById('statWalked').textContent = `${num}${unit}`;
-    document.getElementById('statTrip').textContent = `#${tripNumber}`;
+    document.getElementById('statTrip').textContent   = `#${tripNumber}`;
 
     document.getElementById('arrivalScreen').classList.remove('hidden');
   }
 
+  // ── Next destination ──
   async function nextDestination() {
     document.getElementById('arrivalScreen').classList.add('hidden');
     tripNumber++;
@@ -719,24 +678,27 @@
 
     if (currentPos) {
       destination = await pickDestination(currentPos.lat, currentPos.lng, selectedKm);
-      startPos = { ...currentPos };
+      startPos    = { ...currentPos };
+      saveState();
       startTracking();
     }
   }
 
+  // ── Reset ──
   async function resetDestination() {
     isResetting = true;
     if (watchId) { navigator.geolocation.clearWatch(watchId); watchId = null; }
     totalDistanceTraveled = 0;
     document.getElementById('progressRing').style.strokeDashoffset = CIRC.toFixed(1);
-    document.getElementById('distanceNum').textContent = '—';
-    document.getElementById('bearingText').textContent = '—°';
+    document.getElementById('distanceNum').textContent  = '—';
+    document.getElementById('bearingText').textContent  = '—°';
     document.getElementById('arrowWrap').style.transform = 'rotate(0deg)';
 
     if (currentPos) {
       destination = await pickDestination(currentPos.lat, currentPos.lng, selectedKm);
-      startPos = { ...currentPos };
-      lastPos = { ...currentPos };
+      startPos    = { ...currentPos };
+      lastPos     = { ...currentPos };
+      saveState();
       isResetting = false;
       startTracking();
     } else {
@@ -744,12 +706,7 @@
     }
   }
 
-  function selectDist(btn, km) {
-    document.querySelectorAll('.dist-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    selectedKm = km;
-  }
-
+  // ── GPS watch ──
   function startTracking() {
     if (watchId) navigator.geolocation.clearWatch(watchId);
     watchId = navigator.geolocation.watchPosition(
@@ -762,6 +719,7 @@
     );
   }
 
+  // ── Start ──
   async function startApp() {
     document.getElementById('startScreen').classList.add('hidden');
     document.getElementById('errorScreen').classList.add('hidden');
@@ -770,14 +728,24 @@
       async (pos) => {
         const { latitude, longitude } = pos.coords;
         currentPos = { lat: latitude, lng: longitude };
-        startPos = { ...currentPos };
-        lastPos = { ...currentPos };
+        lastPos    = { ...currentPos };
 
         document.getElementById('mainUI').style.display = 'flex';
         drawTicks();
 
-        destination = await pickDestination(latitude, longitude, selectedKm);
-        startTracking();
+        // 保存済み状態を復元
+        if (loadState()) {
+          document.getElementById('tripBadge').textContent = `旅 #${tripNumber}`;
+          syncDistButtons();
+          if (!startPos) startPos = { ...currentPos };
+          startTracking();
+        } else {
+          // 新規スタート
+          startPos    = { ...currentPos };
+          destination = await pickDestination(latitude, longitude, selectedKm);
+          saveState();
+          startTracking();
+        }
       },
       (err) => {
         document.getElementById('errorMsg').textContent =
