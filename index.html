@@ -618,20 +618,36 @@
     }
   }
 
+  // ── State for orientation ──
+  let bearingToDestination = 0; // 目的地への絶対方角（北基準）
+  let deviceHeading = null;     // 端末の向き（北基準）
+  let orientationActive = false;
+
+  function updateArrow() {
+    let rotation;
+    if (orientationActive && deviceHeading !== null) {
+      // 端末の向きを考慮: 自分が向いてる方向基準で目的地の方角を出す
+      rotation = bearingToDestination - deviceHeading;
+    } else {
+      rotation = bearingToDestination;
+    }
+    document.getElementById('arrowWrap').style.transform = `rotate(${rotation}deg)`;
+  }
+
   // ── GPS update ──
   function updateUI(pos) {
     const { latitude, longitude } = pos.coords;
     currentPos = { lat: latitude, lng: longitude };
 
     document.getElementById('gpsDot').classList.remove('inactive');
-    document.getElementById('statusLabel').textContent = '追跡中';
+    document.getElementById('statusLabel').textContent = orientationActive ? '方位センサー有効' : '追跡中';
 
     if (!destination || isResetting) return;
 
     const dist  = haversine(latitude, longitude, destination.lat, destination.lng);
     const bear  = calcBearing(latitude, longitude, destination.lat, destination.lng);
-
-    document.getElementById('arrowWrap').style.transform = `rotate(${bear}deg)`;
+    bearingToDestination = bear;
+    updateArrow();
 
     const { num, unit } = formatDist(dist);
     document.getElementById('distanceNum').textContent  = num;
@@ -719,6 +735,41 @@
     );
   }
 
+  // ── Orientation sensor ──
+  function startOrientation() {
+    const handler = (e) => {
+      // iOS: webkitCompassHeading が信頼性高い
+      // Android: 360 - alpha (alpha は反時計回りのため)
+      if (e.webkitCompassHeading !== undefined) {
+        deviceHeading = e.webkitCompassHeading;
+      } else if (e.absolute && e.alpha !== null) {
+        deviceHeading = (360 - e.alpha) % 360;
+      } else if (e.alpha !== null) {
+        deviceHeading = (360 - e.alpha) % 360;
+      }
+      orientationActive = true;
+      updateArrow();
+      document.getElementById('statusLabel').textContent = '方位センサー有効';
+    };
+
+    if (typeof DeviceOrientationEvent !== 'undefined' &&
+        typeof DeviceOrientationEvent.requestPermission === 'function') {
+      // iOS 13+ は許可が必要
+      DeviceOrientationEvent.requestPermission()
+        .then(state => {
+          if (state === 'granted') {
+            window.addEventListener('deviceorientation', handler, true);
+          } else {
+            console.warn('orientation permission denied');
+          }
+        })
+        .catch(console.error);
+    } else if (typeof DeviceOrientationEvent !== 'undefined') {
+      // Android など
+      window.addEventListener('deviceorientation', handler, true);
+    }
+  }
+
   // ── Start ──
   async function startApp() {
     document.getElementById('startScreen').classList.add('hidden');
@@ -732,6 +783,7 @@
 
         document.getElementById('mainUI').style.display = 'flex';
         drawTicks();
+        startOrientation();
 
         // 保存済み状態を復元
         if (loadState()) {
